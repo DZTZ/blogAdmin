@@ -1,1 +1,1 @@
-// export { default as StarOutline } from "@ant-design/icons/lib/outline/StarOutline";
+// export { default as ErrorOutline } from "@ant-design/icons/lib/outline/ErrorOutline";
