@@ -9,6 +9,7 @@ module.exports = {
   runtimeCompiler: true,
   productionSourceMap: false,
   lintOnSave: false,
+  outputDir: "docs",
   configureWebpack: {
     resolve: {
       alias: {
