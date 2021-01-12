@@ -1,9 +1,9 @@
-const path = require("path");
+// const path = require("path");
 // const CompressionPlugin = require("compression-webpack-plugin");
-function resolve(dir) {
-  // path.join()方法用于连接路径
-  return path.join(__dirname, dir);
-}
+// function resolve(dir) {
+//   // path.join()方法用于连接路径
+//   return path.join(__dirname, dir);
+// }
 
 module.exports = {
   publicPath: "./",
@@ -12,12 +12,12 @@ module.exports = {
   lintOnSave: false,
   outputDir: "docs",
   configureWebpack: {
-    resolve: {
-      alias: {
-        //按需引入 antd icon
-        "@ant-design/icons/lib/dist$": resolve("./src/antd/icons.js")
-      }
-    },
+    // resolve: {
+    //   alias: {
+    //     //按需引入 antd icon
+    //     "@ant-design/icons/lib/dist$": resolve("./src/antd/icons.js")
+    //   }
+    // },
     plugins: [
       // new CompressionPlugin({
       //   test: /\.(js|css)?$/i, // 哪些文件要压缩

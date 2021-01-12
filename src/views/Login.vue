@@ -1,17 +1,20 @@
 <template>
   <div class="Login">
+    <transition name="acc">
+      <div class="Login-bg" v-if="is_show"></div>
+    </transition>
     <div class="content">
       <div class="input-box">
         <h3 class="title">LOGIN</h3>
         <div class="account">
-          <input type="text" placeholder="ACCOUNT" v-mode="account" />
+          <input type="text" placeholder="ACCOUNT" v-model="account" />
         </div>
         <div class="password">
-          <input type="password" placeholder="PASSWORD" v-mode="password" />
+          <input type="password" placeholder="PASSWORD" v-model="password" />
         </div>
       </div>
-      <a-alert type="error" message="Error text" banner />
-      <div class="btn-box bold">
+      <a-alert type="error" :message="errorMessage" banner v-show="errorMessage !== ''" />
+      <div class="btn-box bold" @click="onSignIn">
         SIGN IN
       </div>
     </div>
@@ -25,12 +28,19 @@ export default {
   data() {
     return {
       account: "",
-      password: ""
+      password: "",
+      errorMessage: "",
+      is_show: false
     };
   },
-  created() {},
+  created() {
+    setTimeout(() => {
+      this.is_show = true;
+    }, 1111);
+  },
   methods: {
-    onLoad() {
+    onSignIn() {
+      this.errorMessage = "Wrong account or password!";
       console.log(123);
     }
   }
@@ -39,9 +49,18 @@ export default {
 
 <style lang="less" scoped>
 .Login {
-  background: url("~@/assets/images/bg.jpg") no-repeat center;
-  background-size: cover;
   height: 100%;
+  background-image: linear-gradient(to right, black, #313e4f);
+  .Login-bg {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: url("~@/assets/images/bg.jpg") no-repeat center;
+    background-size: cover;
+    //z-index: -1;
+  }
   .content {
     overflow: hidden;
     background: #ffffff;
@@ -52,7 +71,7 @@ export default {
     transform: translate(-50%, -50%);
     font-family: "微软雅黑", "黑体", "宋体";
     .input-box {
-      padding: 25px 30px;
+      padding: 25px 30px 20px 30px;
     }
     .title {
       color: #3b495d;
@@ -80,5 +99,12 @@ export default {
       background: #495e77;
     }
   }
+}
+.acc-enter-active,
+.acc-leave-active {
+  transition: opacity 4s;
+}
+.acc-enter, .acc-leave-to /* .fade-leave-active, 2.1.8 版本以下 */ {
+  opacity: 0;
 }
 </style>
