@@ -36,7 +36,7 @@ export default {
   created() {
     setTimeout(() => {
       this.is_show = true;
-    }, 1111);
+    }, 2000);
   },
   methods: {
     onSignIn() {
