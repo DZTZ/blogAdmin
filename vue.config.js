@@ -5,6 +5,14 @@
 //   return path.join(__dirname, dir);
 // }
 
+let cdn = {
+  css: [],
+  js: [
+    "https://cdn.jsdelivr.net/npm/vue@2.6.12/dist/vue.min.js",
+    "https://cdn.jsdelivr.net/npm/vue-router@3.4.9/dist/vue-router.min.js",
+    "https://cdn.jsdelivr.net/npm/vuex@3.6.0/dist/vuex.min.js"
+  ]
+};
 module.exports = {
   publicPath: "./",
   runtimeCompiler: true,
@@ -12,6 +20,11 @@ module.exports = {
   lintOnSave: false,
   outputDir: "docs",
   configureWebpack: {
+    externals: {
+      vue: "Vue",
+      "vue-router": "VueRouter",
+      vuex: "Vuex"
+    },
     // resolve: {
     //   alias: {
     //     //按需引入 antd icon
@@ -27,6 +40,12 @@ module.exports = {
       //   deleteOriginalAssets: true // 删除未压缩的文件，谨慎设置，如果希望提供非gzip的资源，可不设置或者设置为false
       // })
     ]
+  },
+  chainWebpack(config) {
+    config.plugin("html").tap(args => {
+      args[0].cdn = cdn;
+      return args;
+    });
   },
   css: {
     loaderOptions: {
