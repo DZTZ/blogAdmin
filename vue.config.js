@@ -6,11 +6,12 @@
 // }
 
 let cdn = {
-  css: [],
+  css: ["https://cdn.jsdelivr.net/npm/ant-design-vue@1.7.2/dist/antd.min.css"],
   js: [
     "https://cdn.jsdelivr.net/npm/vue@2.6.12/dist/vue.min.js",
     "https://cdn.jsdelivr.net/npm/vue-router@3.4.9/dist/vue-router.min.js",
-    "https://cdn.jsdelivr.net/npm/vuex@3.6.0/dist/vuex.min.js"
+    "https://cdn.jsdelivr.net/npm/vuex@3.6.0/dist/vuex.min.js",
+    "https://cdn.jsdelivr.net/npm/ant-design-vue@1.7.2/lib/index.min.js"
   ]
 };
 module.exports = {
@@ -23,7 +24,8 @@ module.exports = {
     externals: {
       vue: "Vue",
       "vue-router": "VueRouter",
-      vuex: "Vuex"
+      vuex: "Vuex",
+      "ant-design-vue": "antd"
     },
     // resolve: {
     //   alias: {
