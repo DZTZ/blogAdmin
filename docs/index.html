@@ -1,0 +1,59 @@
+<!DOCTYPE html><html lang="zh-cn"><head><meta charset="utf-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width,initial-scale=1"><link rel="icon" href="favicon.ico"><title>blogAdmin</title><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/ant-design-vue@1.7.2/dist/antd.min.css"><script src="https://cdn.jsdelivr.net/npm/vue@2.6.12/dist/vue.min.js"></script><script src="https://cdn.jsdelivr.net/npm/vue-router@3.4.9/dist/vue-router.min.js"></script><script src="https://cdn.jsdelivr.net/npm/vuex@3.6.0/dist/vuex.min.js"></script><script src="https://cdn.jsdelivr.net/npm/ant-design-vue@1.7.2/lib/index.min.js"></script><style>.spinner {
+      width: 32px;
+      height: 32px;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+    }
+    .cube1, .cube2 {
+      background-color: #475D72;
+      width: 30px;
+      height: 30px;
+      position: absolute;
+      top: 0;
+      left: 0;
+      -webkit-animation: cubemove 1.8s infinite ease-in-out;
+      animation: cubemove 1.8s infinite ease-in-out;
+    }
+    .cube2 {
+      -webkit-animation-delay: -0.9s;
+      animation-delay: -0.9s;
+    }
+
+    @-webkit-keyframes cubemove {
+      25% {
+        -webkit-transform: translateX(42px) rotate(-90deg) scale(0.5)
+      }
+      50% {
+        -webkit-transform: translateX(42px) translateY(42px) rotate(-180deg)
+      }
+      75% {
+        -webkit-transform: translateX(0px) translateY(42px) rotate(-270deg) scale(0.5)
+      }
+      100% {
+        -webkit-transform: rotate(-360deg)
+      }
+    }
+    @keyframes cubemove {
+      25% {
+        transform: translateX(42px) rotate(-90deg) scale(0.5);
+        -webkit-transform: translateX(42px) rotate(-90deg) scale(0.5);
+      }
+      50% {
+        transform: translateX(42px) translateY(42px) rotate(-179deg);
+        -webkit-transform: translateX(42px) translateY(42px) rotate(-179deg);
+      }
+      50.1% {
+        transform: translateX(42px) translateY(42px) rotate(-180deg);
+        -webkit-transform: translateX(42px) translateY(42px) rotate(-180deg);
+      }
+      75% {
+        transform: translateX(0px) translateY(42px) rotate(-270deg) scale(0.5);
+        -webkit-transform: translateX(0px) translateY(42px) rotate(-270deg) scale(0.5);
+      }
+      100% {
+        transform: rotate(-360deg);
+        -webkit-transform: rotate(-360deg);
+      }
+    }</style><link href="css/ArticleManage.38c67e29.css" rel="prefetch"><link href="css/login.e9b4df58.css" rel="prefetch"><link href="js/ArticleManage.71ccf6bd.js" rel="prefetch"><link href="js/PictureManage.b0caf7cc.js" rel="prefetch"><link href="js/login.98627318.js" rel="prefetch"><link href="css/app.1381e35b.css" rel="preload" as="style"><link href="js/app.e7fbec36.js" rel="preload" as="script"><link href="js/chunk-vendors.db260623.js" rel="preload" as="script"><link href="css/app.1381e35b.css" rel="stylesheet"></head><body><noscript><strong>We're sorry but blogAdmin doesn't work properly without JavaScript enabled. Please enable it to continue.</strong></noscript><div id="app"><div class="spinner"><div class="cube1"></div><div class="cube2"></div></div></div><script src="js/chunk-vendors.db260623.js"></script><script src="js/app.e7fbec36.js"></script></body></html>

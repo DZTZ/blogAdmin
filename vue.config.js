@@ -25,7 +25,8 @@ module.exports = {
       vue: "Vue",
       "vue-router": "VueRouter",
       vuex: "Vuex",
-      "ant-design-vue": "antd"
+      // "ant-design-vue": "antd"
+      "vue-antd-ui": "antd"
     },
     // resolve: {
     //   alias: {
