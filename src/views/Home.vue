@@ -26,7 +26,7 @@
         />
         <div class="header-right-box">
           <span class="name">Admin</span>
-<!--          <a-icon type="close-square" class="close" />-->
+          <!--          <a-icon type="close-square" class="close" />-->
         </div>
       </a-layout-header>
       <a-layout-content class="main-contnet">
@@ -48,6 +48,7 @@ export default {
 };
 </script>
 <style lang="less" scoped>
+//@import url("~ant-design-vue/dist/antd.less");
 .main-contnet {
   background: #ffffff;
   padding: 24px;

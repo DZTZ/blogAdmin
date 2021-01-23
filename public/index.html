@@ -8,10 +8,10 @@
   <title><%= htmlWebpackPlugin.options.title %></title>
 
   <% for(var css of htmlWebpackPlugin.options.cdn.css) { %>
-  <link rel="stylesheet" href="<%=css%>" />
+    <link rel="stylesheet" href="<%=css%>" />
   <% } %>
   <% for(var js of htmlWebpackPlugin.options.cdn.js) { %>
-  <script src="<%=js%>"></script>
+    <script src="<%=js%>"></script>
   <% } %>
 
   <style>

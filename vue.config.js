@@ -4,14 +4,15 @@
 //   // path.join()方法用于连接路径
 //   return path.join(__dirname, dir);
 // }
-
+const isProd = process.env.NODE_ENV === "production";
 let cdn = {
   css: ["https://cdn.jsdelivr.net/npm/ant-design-vue@1.7.2/dist/antd.min.css"],
   js: [
-    "https://cdn.jsdelivr.net/npm/vue@2.6.12/dist/vue.min.js",
+    "https://cdn.jsdelivr.net/npm/vue@2.5.21/dist/vue.min.js",
     "https://cdn.jsdelivr.net/npm/vue-router@3.4.9/dist/vue-router.min.js",
     "https://cdn.jsdelivr.net/npm/vuex@3.6.0/dist/vuex.min.js",
-    "https://cdn.jsdelivr.net/npm/ant-design-vue@1.7.2/lib/index.min.js"
+    "https://cdn.jsdelivr.net/npm/moment@2.24.0/min/moment.min.js",
+    "https://cdnjs.cloudflare.com/ajax/libs/ant-design-vue/1.7.2/antd.min.js"
   ]
 };
 module.exports = {
@@ -25,8 +26,8 @@ module.exports = {
       vue: "Vue",
       "vue-router": "VueRouter",
       vuex: "Vuex",
-      // "ant-design-vue": "antd"
-      "vue-antd-ui": "antd"
+      moment: "moment",
+      "ant-design-vue": "antd"
     },
     // resolve: {
     //   alias: {
@@ -44,7 +45,14 @@ module.exports = {
       // })
     ]
   },
-  chainWebpack(config) {
+  chainWebpack: config => {
+    // config.set("externals", {
+    //   vue: "Vue",
+    //   "vue-router": "VueRouter",
+    //   vuex: "Vuex",
+    //   moment: "moment",
+    //   "ant-design-vue": "antd"
+    // });
     config.plugin("html").tap(args => {
       args[0].cdn = cdn;
       return args;
