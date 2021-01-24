@@ -7,14 +7,14 @@
   <link rel="icon" href="<%= BASE_URL %>favicon.ico">
   <title><%= htmlWebpackPlugin.options.title %></title>
 
-  <script type="text/javascript">
-    <!--//--><![CDATA[//><!--
-    if (document.images) {
-      img = new Image();
-      img.src = "https://dztz.github.io/blogAdmin/img/bg.6255831c.jpg";
-    }
-    //--><!]]>
-  </script>
+<!--  <script type="text/javascript">-->
+<!--    &lt;!&ndash;//&ndash;&gt;<![CDATA[//>&lt;!&ndash;-->
+<!--    if (document.images) {-->
+<!--      img = new Image();-->
+<!--      img.src = "https://dztz.github.io/blogAdmin/img/bg.6255831c.jpg";-->
+<!--    }-->
+<!--    //&ndash;&gt;<!]]>-->
+<!--  </script>-->
 
   <% for(var css of htmlWebpackPlugin.options.cdn.css) { %>
     <link rel="stylesheet" href="<%=css%>" />
@@ -24,6 +24,7 @@
   <% } %>
 
   <style>
+    body{ background: url('../src/assets/images/bg.jpg') no-repeat -9999px -9999px; }
     .spinner {
       width: 32px;
       height: 32px;
