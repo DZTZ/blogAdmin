@@ -7,9 +7,18 @@
   <link rel="icon" href="<%= BASE_URL %>favicon.ico">
   <title><%= htmlWebpackPlugin.options.title %></title>
 
+  <script type="text/javascript">
+    <!--//--><![CDATA[//><!--
+    if (document.images) {
+      img = new Image();
+      img.src = "https://dztz.github.io/blogAdmin/img/bg.6255831c.jpg";
+    }
+    //--><!]]>
+  </script>
+
   <% for(var css of htmlWebpackPlugin.options.cdn.css) { %>
     <link rel="stylesheet" href="<%=css%>" />
-  <% } %>
+  <% } %><!---->
   <% for(var js of htmlWebpackPlugin.options.cdn.js) { %>
     <script src="<%=js%>"></script>
   <% } %>
