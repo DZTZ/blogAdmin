@@ -1,6 +1,7 @@
 import axios from "axios";
 import qs from "qs";
-axios.defaults.baseURL = "/api";
+// axios.defaults.baseURL = "/api";
+axios.defaults.baseURL = "http://www.wjjl.cool/api";
 // 表单请求
 axios.formRequest = axios.create({
   // baseURL: "http://localhost:5050",
@@ -9,17 +10,17 @@ axios.formRequest = axios.create({
   // headers: { 'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8'},
   method: "post", // default
   transformRequest: [
-    function (data, headers) {
+    function(data, headers) {
       // 对 data 进行任意转换处理
       return qs.stringify(data, { arrayFormat: "indices" });
     }
   ]
 });
 axios.formRequest.interceptors.response.use(
-  function (response) {
+  function(response) {
     return response.data;
   },
-  function (error) {
+  function(error) {
     // if (error.response) {
     //     errorCodeHandle(error.response.status);
     // }
@@ -30,14 +31,14 @@ axios.formRequest.interceptors.response.use(
 axios.upFile = axios.create({
   method: "post", // default
   headers: {
-    'Content-Type': 'multipart/form-data'
+    "Content-Type": "multipart/form-data"
   }
 });
 axios.upFile.interceptors.response.use(
-  function (response) {
+  function(response) {
     return response.data;
   },
-  function (error) {
+  function(error) {
     // if (error.response) {
     //   errorCodeHandle(error.response.status);
     // }
