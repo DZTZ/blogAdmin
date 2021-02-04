@@ -72,7 +72,7 @@ module.exports = {
   devServer: {
     proxy: {
       "/api": {
-        target: "http://www.wjjl.cool", // 测试
+        target: targetUrl, // 测试
         ws: false,
         changeOrigin: true
         // pathRewrite: {

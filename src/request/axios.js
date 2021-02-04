@@ -1,7 +1,6 @@
 import axios from "axios";
 import qs from "qs";
-// axios.defaults.baseURL = "/api";
-axios.defaults.baseURL = "http://www.wjjl.cool/api";
+axios.defaults.baseURL = "http://www.wjjl.cool:5050/api";
 // 表单请求
 axios.formRequest = axios.create({
   // baseURL: "http://localhost:5050",
