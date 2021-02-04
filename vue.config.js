@@ -5,7 +5,7 @@
 //   return path.join(__dirname, dir);
 // }
 const isProd = process.env.NODE_ENV === "production";
-let targetUrl = isProd ? 'http://localhost:5050' : 'http://www.wjjl.cool:5050'
+let targetUrl = isProd ? 'http://www.wjjl.cool:5050' : 'http://localhost:5050'
 let cdn = {
   css: ["https://cdn.jsdelivr.net/npm/ant-design-vue@1.7.2/dist/antd.min.css"],
   js: [
