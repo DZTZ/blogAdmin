@@ -5,6 +5,7 @@
 //   return path.join(__dirname, dir);
 // }
 const isProd = process.env.NODE_ENV === "production";
+let targetUrl = isProd ? 'http://localhost:5050' : 'http://www.wjjl.cool:5050'
 let cdn = {
   css: ["https://cdn.jsdelivr.net/npm/ant-design-vue@1.7.2/dist/antd.min.css"],
   js: [
@@ -65,15 +66,18 @@ module.exports = {
         javascriptEnabled: true
       }
     }
-  }
+  },
   // assetsDir: 'static',
-  // devServer: {
-  //   proxy: {
-  //     '/api': {
-  //       target: 'http://api.wjjl.cool', // 测试
-  //       ws: false,
-  //       changeOrigin: true,
-  //     }
-  //   }
-  // },
+  devServer: {
+    proxy: {
+      "/api": {
+        target: targetUrl, // 测试
+        ws: false,
+        changeOrigin: true,
+        // pathRewrite: {
+        //   "^/api": ""
+        // }
+      }
+    }
+  }
 };

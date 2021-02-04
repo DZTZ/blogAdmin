@@ -7,30 +7,36 @@
       <div class="input-box">
         <h3 class="title">LOGIN</h3>
         <div class="account">
-          <input type="text" placeholder="ACCOUNT" v-model="account" />
+          <input type="text" placeholder="ACCOUNT" v-model="username" />
         </div>
         <div class="password">
           <input type="password" placeholder="PASSWORD" v-model="password" />
         </div>
       </div>
       <a-alert type="error" :message="errorMessage" banner v-show="errorMessage !== ''" />
-      <div class="btn-box bold" @click="onSignIn">
-        SIGN IN
+      <a-alert type="success" :message="successMessage" show-icon v-show="successMessage !== ''" />
+      <div class="btn-box bold">
+        <a-button type="primary" :loading="loading" block @click="onSignIn">
+          SIGN IN
+        </a-button>
       </div>
     </div>
   </div>
 </template>
 
 <script>
+import { login } from "@/request/api";
 export default {
   name: "Login",
   components: {},
   data() {
     return {
-      account: "",
+      username: "",
       password: "",
       errorMessage: "",
-      is_show: false
+      successMessage: "",
+      is_show: false,
+      loading: false
     };
   },
   created() {
@@ -40,8 +46,24 @@ export default {
   },
   methods: {
     onSignIn() {
-      this.errorMessage = "Wrong account or password!";
-      console.log(123);
+      this.loading = true;
+      let data = {
+        username: this.username,
+        password: this.password
+      };
+      login(data).then(res => {
+        if (res.state === 0) {
+          this.successMessage = res.msg;
+          this.errorMessage = "";
+          localStorage.setItem("token", res.token.split("&")[1]);
+          setTimeout(() => {
+            this.$router.push({ name: "ArticleManage" });
+          }, 1500);
+        } else {
+          this.loading = false;
+          this.errorMessage = res.msg;
+        }
+      });
     }
   }
 };
@@ -88,7 +110,7 @@ export default {
   }
   .btn-box {
     border-top: 1px solid #e7e7e7;
-    padding: 14px;
+    //padding: 14px;
     text-align: center;
     font-size: 12px;
     background: #313b51;
@@ -97,6 +119,17 @@ export default {
     cursor: pointer;
     &:hover {
       background: #495e77;
+    }
+    button {
+      border-radius: 0;
+      height: 47px;
+      letter-spacing: 2px;
+      background: #313b51;
+      border-color: #313b51;
+      &:hover {
+        border-color: #2f3947;
+        background: #2f3947;
+      }
     }
   }
 }
