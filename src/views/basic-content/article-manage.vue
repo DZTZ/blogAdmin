@@ -2,11 +2,12 @@
   <div class="main-content">
     <div style="overflow: hidden">
       <div class="form-left">
-        <div class="picker-box">
+        <!-- <div class="picker-box">
           <a-range-picker @change="onChange" />
-        </div>
+        </div> -->
         <div class="form-box">
           <a-input-search
+            v-model="keyword"
             placeholder="关键字查询"
             enter-button
             @search="onSearch"
@@ -23,7 +24,8 @@
         :columns="columns"
         :data-source="data"
         :loading="tableLoading"
-        :scroll="{ x: 1600, y: 300 }"
+        :pagination="false"
+        :scroll="{ x: 2000 }"
       >
         <!-- 类型 -->
         <template slot="projectType" slot-scope="text">
@@ -40,15 +42,14 @@
           />
         </template>
         <!-- 预览地址 -->
-        <template slot="browseAddress" slot-scope="text,record">
-           <img
+        <template slot="browseAddress" slot-scope="text">
+          <img
             v-for="(item, index) in text"
             :key="item"
             :src="item"
             class="preview-img"
             @click="onCheckListImg(text, index)"
           />
-          
         </template>
         <!-- 操作按钮 -->
         <template slot="operate" slot-scope="text, record">
@@ -134,13 +135,13 @@
               class="item-box"
               v-for="(item, index) in previewfFleList"
               :key="index"
-              @click="onCheck(index, 1)"
+              @click="onCheck(index, 1, '')"
             >
               <img :src="item.url" :alt="item.name" id="src" />
               <a-icon
                 type="delete"
                 class="delect"
-                @click.stop="onCheck(index, 2)"
+                @click.stop="onCheck(index, 2, '')"
               />
             </div>
           </div>
@@ -165,13 +166,13 @@
               class="item-box"
               v-for="(item, index) in previewfFleList2"
               :key="index"
-              @click="onCheck2(index, 1)"
+              @click="onCheck(index, 1, 2)"
             >
               <img :src="item.url" :alt="item.name" id="src" />
               <a-icon
                 type="delete"
                 class="delect"
-                @click.stop="onCheck2(index, 2)"
+                @click.stop="onCheck(index, 2, 2)"
               />
             </div>
           </div>
@@ -209,7 +210,9 @@ import {
   uploadFile,
   articleList,
   delectArticle,
+  editArticle,
 } from "@/request/api";
+import moment from "moment/moment";
 export default {
   name: "Login",
   components: {},
@@ -220,8 +223,8 @@ export default {
       tableLoading: false,
       addConfirmLoading: false,
       form: this.$form.createForm(this),
-      previewVisible: false,
-      previewImage: "",
+      previewVisible: false, //查看大图 状态
+      previewImage: "", //查看大图地址
       previewfFleList: [], //项目预览列表
       previewfFleList2: [], //项目预览地址列表
       columns: [
@@ -273,14 +276,15 @@ export default {
         {
           title: "创建时间",
           dataIndex: "createDate",
+          scopedSlots: { customRender: "createDate" },
           key: "createDate",
-          width: "10%",
+          width: "8%",
         },
         {
           title: "编辑时间",
           dataIndex: "editDate",
           key: "editDate",
-          width: "10%",
+          width: "8%",
         },
         {
           title: "操作",
@@ -291,30 +295,42 @@ export default {
           width: "140",
         },
       ],
-      data: [],
+      data: [], //表格数据
+      editid: "", //编辑id
+      delectImgData: [], //删除图片的记录 传给后端
+      keyword: "",
     };
   },
   created() {
     this.getList();
   },
   methods: {
-    addCancel() {
-      this.addVisible = false;
+    onSearch() {
+      this.getList(this.keyword);
     },
-    onSearch() {},
-    onChange(e) {
-      console.log(e);
-    },
-    getList() {
+    getList(keyword) {
       this.tableLoading = true;
-      articleList().then((res) => {
+      articleList({ keyword: keyword }).then((res) => {
         if (res.state === 0) {
-          this.data = res.data;
+          let data = res.data;
+          data.map((item) => {
+            item.createDate = moment(item.createDate).format(
+              "YYYY-MM-DD HH:mm"
+            );
+            item.editDate = item.editDate
+              ? moment(item.editDate).format("YYYY-MM-DD HH:mm")
+              : "还没编辑过哟！";
+          });
+          this.data = data;
         } else {
           this.$message.success(res.msg);
         }
         this.tableLoading = false;
       });
+    },
+    addCancel() {
+      this.addVisible = false;
+      this.emptyForm();
     },
     addOk() {
       this.form.validateFields((err, values) => {
@@ -328,7 +344,7 @@ export default {
             let previewImg = [],
               browseAddress = [];
             result.map((res) => {
-              console.log(res);
+              //1是内部预览图 2预览地址
               if (res.dataType === 1) {
                 previewImg.push(res.url);
               } else {
@@ -337,13 +353,20 @@ export default {
             });
             values.previewImg = previewImg;
             values.browseAddress = browseAddress;
-            addArticle(values).then((res) => {
+            let fun = addArticle;
+            if (this.editid !== "") {
+              fun = editArticle;
+              values._id = this.editid;
+              values.delectImgData = this.delectImgData;
+            }
+            fun(values).then((res) => {
               if (res.state === 0) {
                 this.$message.success(res.msg);
                 this.getList();
               } else {
-                this.$message.success("后台出错");
+                this.$message.error(res.msg);
               }
+              this.emptyForm();
               this.addConfirmLoading = false;
               this.addVisible = false;
             });
@@ -351,21 +374,34 @@ export default {
         }
       });
     },
+    //清空表单
+    emptyForm() {
+      this.form.resetFields();
+      this.previewfFleList = [];
+      this.previewfFleList2 = [];
+      this.delectImgData = [];
+      this.editid = "";
+    },
     //上传文件
     uploadFilePromise(file) {
       return new Promise(function (resolve, reject) {
-        let formData = new FormData();
-        formData.append("file", file);
-        uploadFile(formData).then((res) => {
-          if (res.state === 0) {
-            resolve({
-              dataType: file.dataType,
-              url: res.data.url,
-            });
-          } else {
-            reject(res);
-          }
-        });
+        //如果只有两个属性 不需要上传
+        if (Object.keys(file).length === 2) {
+          resolve(file);
+        } else {
+          let formData = new FormData();
+          formData.append("file", file);
+          uploadFile(formData).then((res) => {
+            if (res.state === 0) {
+              resolve({
+                dataType: file.dataType,
+                url: res.data.url,
+              });
+            } else {
+              reject(res);
+            }
+          });
+        }
       });
     },
     // 上传之前
@@ -399,40 +435,76 @@ export default {
     previewVisibleCancel() {
       this.previewVisible = false;
     },
-    onCheck2(index, type) {
+    onCheck(index, type, imgType) {
       if (type === 1) {
         this.previewVisible = true;
-        this.previewImage = this.previewfFleList2[index].url;
+        this.previewImage = this[`previewfFleList${imgType}`][index].url;
       } else {
-        this.previewfFleList2.splice(index, 1);
-      }
-    },
-    onCheck(index, type) {
-      if (type === 1) {
-        this.previewVisible = true;
-        this.previewImage = this.previewfFleList[index].url;
-      } else {
-        this.previewfFleList.splice(index, 1);
+        let list = this[`previewfFleList${imgType}`];
+        if (Object.keys(list[index]).length === 2) {
+          let tempStr = list[index].url;
+          var newString = tempStr.substring(
+            tempStr.lastIndexOf("/") + 1,
+            tempStr.length
+          );
+          this.delectImgData.push(newString);
+        }
+        this[`previewfFleList${imgType}`].splice(index, 1);
       }
     },
     onCheckListImg(item, index) {
       this.previewVisible = true;
       this.previewImage = item[index];
     },
-    operateBtn({ _id }, type) {
+    operateBtn(item, type) {
       if (type === 1) {
         //编辑
-        console.log(_id);
+        console.log(item);
+        this.addVisible = true;
+        this.addTitle = "编辑数据";
+        this.editid = item._id;
+        let browseAddress = [],
+          previewImg = [];
+        if (item.previewImg) {
+          previewImg = item.previewImg.map((item) => {
+            return { dataType: 1, url: item };
+          });
+        }
+        if (item.browseAddress) {
+          browseAddress = item.browseAddress.map((item) => {
+            return { dataType: 2, url: item };
+          });
+        }
+        this.previewfFleList = previewImg;
+        this.previewfFleList2 = browseAddress;
+        setTimeout(() => {
+          this.form.setFieldsValue({
+            ...item,
+          });
+        }, 300);
       } else {
         //删除
-        delectArticle({ _id }).then((res) => {
-          if (res.state === 0) {
-            this.$message.success(res.msg);
-            this.getList();
-          } else {
-            this.$message.success(res.msg);
-          }
+        let taht = this;
+        this.$confirm({
+          title: "删除",
+          content: "确定删除这条数据？",
+          okText: "是",
+          okType: "danger",
+          cancelText: "否",
+          onOk() {
+            delectArticle({ _id: item._id }).then((res) => {
+              if (res.state === 0) {
+                taht.$message.success(res.msg);
+                taht.getList();
+              } else {
+                taht.$message.success(res.msg);
+              }
+            });
+          },
+          onCancel() {
+          },
         });
+        return;
       }
     },
   },

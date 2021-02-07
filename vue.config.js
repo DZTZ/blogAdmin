@@ -6,7 +6,7 @@
 // }
 const isProd = process.env.NODE_ENV === "production";
 let targetUrl = isProd ? "http://www.wjjl.cool:5050" : "http://localhost:5050";
-
+console.log(targetUrl);
 let cdn = {
   css: ["https://cdn.jsdelivr.net/npm/ant-design-vue@1.7.2/dist/antd.min.css"],
   js: [
