@@ -29,6 +29,14 @@ const routes = [
           import(
             /* webpackChunkName: "PictureManage" */ "../views/basic-content/picture-manage.vue"
           )
+      },
+      {
+        path: "/data-backup",
+        name: "DataBackup",
+        component: () =>
+          import(
+            /* webpackChunkName: "PictureManage" */ "../views/basic-content/data-backup.vue"
+          )
       }
     ]
   },

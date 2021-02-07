@@ -1,6 +1,17 @@
 import axios from "axios";
 import qs from "qs";
-axios.defaults.baseURL = "http://www.wjjl.cool:5050/api";
+import router from '../router/index';
+const isProd = process.env.NODE_ENV === "production";
+
+// 返回错误码处理
+function errorCodeHandle(codeStatus) {
+  switch (codeStatus) {
+    case 401:
+      router.push({ name: 'Login' });
+  }
+}
+
+axios.defaults.baseURL = isProd ? "http://www.wjjl.cool:5050/api" : '/api';
 // 表单请求
 axios.formRequest = axios.create({
   // baseURL: "http://localhost:5050",
@@ -9,20 +20,20 @@ axios.formRequest = axios.create({
   // headers: { 'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8'},
   method: "post", // default
   transformRequest: [
-    function(data, headers) {
+    function (data, headers) {
       // 对 data 进行任意转换处理
       return qs.stringify(data, { arrayFormat: "indices" });
     }
   ]
 });
 axios.formRequest.interceptors.response.use(
-  function(response) {
+  function (response) {
     return response.data;
   },
-  function(error) {
-    // if (error.response) {
-    //     errorCodeHandle(error.response.status);
-    // }
+  function (error) {
+    if (error.response) {
+      errorCodeHandle(error.response.status);
+    }
     return Promise.reject(error);
   }
 );
@@ -34,10 +45,10 @@ axios.upFile = axios.create({
   }
 });
 axios.upFile.interceptors.response.use(
-  function(response) {
+  function (response) {
     return response.data;
   },
-  function(error) {
+  function (error) {
     // if (error.response) {
     //   errorCodeHandle(error.response.status);
     // }

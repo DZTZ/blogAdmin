@@ -5,6 +5,8 @@ const api = {
   uploadFile: '/uploadFile',
   articleList: '/articleList',
   delectArticle: '/delectArticle',
+  editArticle: '/editArticle',
+  dataBackup: '/dataBackup',
 };
 
 /**
@@ -30,6 +32,20 @@ export function articleList(parameters) {
  */
 export function delectArticle(parameters) {
   return axios.formRequest.post(api.delectArticle, parameters);
+}
+/**
+ *  编辑文章
+ */
+export function editArticle(parameters) {
+  return axios.formRequest.post(api.editArticle, parameters);
+}
+
+
+/**
+ *  备份数据
+ */
+export function dataBackup(parameters) {
+  return axios.formRequest.post(api.dataBackup, parameters);
 }
 /**
  *  图片上传

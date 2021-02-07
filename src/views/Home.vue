@@ -2,7 +2,11 @@
   <a-layout style="height: 100%">
     <a-layout-sider v-model="collapsed" :trigger="null" collapsible>
       <div class="logo">{{ !collapsed ? "BlogAdmin" : "Blog" }}</div>
-      <a-menu theme="dark" mode="inline" :default-selected-keys="$store.state.selectedKeys">
+      <a-menu
+        theme="dark"
+        mode="inline"
+        :default-selected-keys="$store.state.selectedKeys"
+      >
         <a-menu-item key="/article-manage">
           <router-link to="/article-manage">
             <a-icon type="unordered-list" />
@@ -13,6 +17,12 @@
           <router-link to="/picture-manage">
             <a-icon type="file-image" />
             <span>图片管理</span>
+          </router-link>
+        </a-menu-item>
+        <a-menu-item key="/data-backup">
+          <router-link to="/data-backup">
+            <a-icon type="database" />
+            <span>数据备份</span>
           </router-link>
         </a-menu-item>
       </a-menu>
@@ -41,10 +51,10 @@ export default {
   components: {},
   data() {
     return {
-      collapsed: false
+      collapsed: false,
     };
   },
-  created() {}
+  created() {},
 };
 </script>
 <style lang="less" scoped>
