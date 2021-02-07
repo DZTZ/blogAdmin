@@ -40,6 +40,7 @@ axios.formRequest.interceptors.response.use(
 // 上传文件
 axios.upFile = axios.create({
   method: "post", // default
+  withCredentials: true,
   headers: {
     "Content-Type": "multipart/form-data"
   }
