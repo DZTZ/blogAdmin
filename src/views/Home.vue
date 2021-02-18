@@ -10,7 +10,13 @@
         <a-menu-item key="/article-manage">
           <router-link to="/article-manage">
             <a-icon type="unordered-list" />
-            <span>文章管理</span>
+            <span>项目管理</span>
+          </router-link>
+        </a-menu-item>
+        <a-menu-item key="/diary-manage">
+          <router-link to="/diary-manage">
+            <a-icon type="edit" />
+            <span>日记管理</span>
           </router-link>
         </a-menu-item>
         <a-menu-item key="/picture-manage">

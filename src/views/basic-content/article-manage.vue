@@ -15,7 +15,9 @@
         </div>
       </div>
       <div class="form-right">
-        <a-button type="primary" @click="addVisible = true"> 添加 </a-button>
+        <a-button type="primary" icon="plus" @click="addVisible = true">
+          添加
+        </a-button>
       </div>
     </div>
 
@@ -42,14 +44,19 @@
           />
         </template>
         <!-- 预览地址 -->
-        <template slot="browseAddress" slot-scope="text">
-          <img
-            v-for="(item, index) in text"
-            :key="item"
-            :src="item"
-            class="preview-img"
-            @click="onCheckListImg(text, index)"
-          />
+        <template slot="browseAddress" slot-scope="text, record">
+          <div v-if="record.addressType === 2">
+            <img
+              v-for="(item, index) in text"
+              :key="item"
+              :src="item"
+              class="preview-img"
+              @click="onCheckListImg(text, index)"
+            />
+          </div>
+          <div v-else>
+            <a class="link" :href="text" target="_blank">{{ text }}</a>
+          </div>
         </template>
         <!-- 操作按钮 -->
         <template slot="operate" slot-scope="text, record">
@@ -161,35 +168,48 @@
           </a-upload>
         </a-form-item>
         <a-form-item label="项目预览地址">
-          <div class="preview-list">
-            <div
-              class="item-box"
-              v-for="(item, index) in previewfFleList2"
-              :key="index"
-              @click="onCheck(index, 1, 2)"
-            >
-              <img :src="item.url" :alt="item.name" id="src" />
-              <a-icon
-                type="delete"
-                class="delect"
-                @click.stop="onCheck(index, 2, 2)"
-              />
-            </div>
-          </div>
-          <a-upload
-            name="file"
-            accept="image/*"
-            :showUploadList="false"
-            :multiple="true"
-            :beforeUpload="beforeUpload2"
-            list-type="picture-card"
-            :file-list="previewfFleList2"
+          <a-radio-group
+            @change="selectAddressType"
+            v-decorator="['addressType', { initialValue: 1 }]"
           >
-            <div v-if="previewfFleList2.length < 8">
-              <a-icon type="plus" />
-              <div class="ant-upload-text">Upload</div>
+            <a-radio :value="1">链接地址</a-radio>
+            <a-radio :value="2">图片/二维码</a-radio>
+          </a-radio-group>
+
+          <div v-if="addressType == 1">
+            <a-input placeholder="项目名称！" v-decorator="['browseAddress']" />
+          </div>
+          <div v-else>
+            <div class="preview-list">
+              <div
+                class="item-box"
+                v-for="(item, index) in previewfFleList2"
+                :key="index"
+                @click="onCheck(index, 1, 2)"
+              >
+                <img :src="item.url" :alt="item.name" id="src" />
+                <a-icon
+                  type="delete"
+                  class="delect"
+                  @click.stop="onCheck(index, 2, 2)"
+                />
+              </div>
             </div>
-          </a-upload>
+            <a-upload
+              name="file"
+              accept="image/*"
+              :showUploadList="false"
+              :multiple="true"
+              :beforeUpload="beforeUpload2"
+              list-type="picture-card"
+              :file-list="previewfFleList2"
+            >
+              <div v-if="previewfFleList2.length < 8">
+                <a-icon type="plus" />
+                <div class="ant-upload-text">Upload</div>
+              </div>
+            </a-upload>
+          </div>
         </a-form-item>
       </a-form>
     </a-modal>
@@ -239,7 +259,7 @@ export default {
           dataIndex: "projectType", //1 移动 2 pc
           key: "projectType",
           scopedSlots: { customRender: "projectType" },
-          width: "6%",
+          width: "3%",
         },
         {
           title: "类型",
@@ -299,6 +319,7 @@ export default {
       editid: "", //编辑id
       delectImgData: [], //删除图片的记录 传给后端
       keyword: "",
+      addressType: 1,
     };
   },
   created() {
@@ -352,7 +373,9 @@ export default {
               }
             });
             values.previewImg = previewImg;
-            values.browseAddress = browseAddress;
+            if (values.addressType === 2) {
+              values.browseAddress = browseAddress;
+            }
             let fun = addArticle;
             if (this.editid !== "") {
               fun = editArticle;
@@ -381,6 +404,7 @@ export default {
       this.previewfFleList2 = [];
       this.delectImgData = [];
       this.editid = "";
+      this.addressType = 1;
     },
     //上传文件
     uploadFilePromise(file) {
@@ -470,7 +494,7 @@ export default {
             return { dataType: 1, url: item };
           });
         }
-        if (item.browseAddress) {
+        if (item.browseAddress && item.addressType == 2) {
           browseAddress = item.browseAddress.map((item) => {
             return { dataType: 2, url: item };
           });
@@ -481,6 +505,7 @@ export default {
           this.form.setFieldsValue({
             ...item,
           });
+          this.addressType = item.addressType;
         }, 300);
       } else {
         //删除
@@ -492,7 +517,20 @@ export default {
           okType: "danger",
           cancelText: "否",
           onOk() {
-            delectArticle({ _id: item._id }).then((res) => {
+            let { previewImg, browseAddress, addressType } = item,
+              delectImgArr = [];
+            delectImgArr = previewImg;
+            if (addressType === 2 && browseAddress) {
+              delectImgArr = [...delectImgArr, ...browseAddress];
+            }
+            delectImgArr = delectImgArr.map((item) => {
+              return item.substring(item.lastIndexOf("/") + 1, item.length);
+            });
+
+            delectArticle({
+              _id: item._id,
+              delectImgArr: delectImgArr ? delectImgArr : [],
+            }).then((res) => {
               if (res.state === 0) {
                 taht.$message.success(res.msg);
                 taht.getList();
@@ -501,11 +539,13 @@ export default {
               }
             });
           },
-          onCancel() {
-          },
+          onCancel() {},
         });
         return;
       }
+    },
+    selectAddressType(e) {
+      this.addressType = e.target.value;
     },
   },
 };
@@ -575,6 +615,9 @@ export default {
     width: 50px;
     height: 50px;
     margin: 0 5px 5px 0;
+  }
+  .link {
+    color: #4897f8;
   }
 }
 </style>

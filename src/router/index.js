@@ -23,6 +23,14 @@ const routes = [
           )
       },
       {
+        path: "/diary-manage",
+        name: "DiaryManage",
+        component: () =>
+          import(
+            /* webpackChunkName: "ArticleManage" */ "../views/basic-content/diary-manage.vue"
+          )
+      },
+      {
         path: "/picture-manage",
         name: "PictureManage",
         component: () =>
